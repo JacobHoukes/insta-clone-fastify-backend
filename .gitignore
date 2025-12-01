@@ -56,3 +56,7 @@ profile-*
 profile*
 *clinic*
 *flamegraph*
+
+# Ignore local SQLite database
+database.db
+
