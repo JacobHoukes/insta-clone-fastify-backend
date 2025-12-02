@@ -24,8 +24,15 @@ const createTransactionHelpers = (db: Database) => {
     },
   };
 
+  const reels = {
+    getAll: () => {
+      return db.prepare("SELECT * FROM reels").all();
+    },
+  };
+
   return {
     posts,
+    reels,
   };
 };
 
