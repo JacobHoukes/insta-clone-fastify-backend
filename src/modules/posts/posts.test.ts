@@ -24,7 +24,7 @@ describe("GET /posts", () => {
                 getAll: jest.fn().mockReturnValue(mockPosts),
                 create: jest.fn(),
             },
-        })
+        } as any)
 
         app.register(postsRoutes)
 

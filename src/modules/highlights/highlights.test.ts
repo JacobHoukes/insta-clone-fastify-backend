@@ -25,7 +25,7 @@ describe("GET /highlights/grid", () => {
                 getAll: jest.fn().mockReturnValue(mockHighlights),
                 getById: jest.fn(),
             },
-        })
+        } as any)
 
         app.register(highlightsRoutes)
 
