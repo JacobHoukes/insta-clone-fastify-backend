@@ -1,147 +1,73 @@
-// tagged.routes.test.ts
-
 import Fastify from "fastify"
-
 import { taggedRoutes } from "./tagged.routes"
 
-describe("Tagged routes", () => {
-
-    it("GET /tagged/grid – should return a list of tagged items with a 200 status code", async () => {
-
+describe("GET /tagged/grid", () => {
+    it("should return a list of tagged items with a 200 status code", async () => {
         const app = Fastify()
 
         const mockTagged = [
-
             {
-
                 id: 1,
-
-                image_url: "http://example.com/image1.jpg",
-
-                caption: "Tagged 1",
-
-                user_id: 42,
-
+                img_url: "http://example.com/img1.jpg",
+                caption: "Tagged post 1",
+                tagged_user_id: 2,
+                created_at: "2025-01-01 10:00:00",
             },
-
             {
-
                 id: 2,
-
-                image_url: "http://example.com/image2.jpg",
-
-                caption: "Tagged 2",
-
-                user_id: 42,
-
+                img_url: "http://example.com/img2.jpg",
+                caption: "Tagged post 2",
+                tagged_user_id: 2,
+                created_at: "2025-01-01 10:05:00",
             },
-
         ]
 
         app.decorate("transactions", {
-
-            posts: {
-
-                create: jest.fn(),
-
-                getAll: jest.fn(),
-
-                getById: jest.fn(),
-
-            },
-
-            reels: {
-
-                getAll: jest.fn(),
-
-            },
-
             tagged: {
-
                 getAll: jest.fn().mockReturnValue(mockTagged),
-
                 getById: jest.fn(),
-
             },
-
         })
 
         app.register(taggedRoutes)
 
         const response = await app.inject({
-
             method: "GET",
-
             url: "/tagged/grid",
-
         })
 
         expect(response.statusCode).toBe(200)
-
         expect(JSON.parse(response.payload)).toEqual(mockTagged)
-
     })
+})
 
-    it("GET /tagged/:id – should return a single tagged item by id with 200 status code", async () => {
-
+describe("GET /tagged/:id", () => {
+    it("should return a tagged item by id with a 200 status code", async () => {
         const app = Fastify()
 
         const taggedItem = {
-
-            id: 123,
-
-            image_url: "http://example.com/tagged123.jpg",
-
-            caption: "Tagged item 123",
-
-            user_id: 99,
-
+            id: 5,
+            img_url: "http://example.com/img5.jpg",
+            caption: "Tagged item",
+            tagged_user_id: 2,
+            created_at: "2025-01-01 12:00:00",
         }
 
         app.decorate("transactions", {
-
-            posts: {
-
-                create: jest.fn(),
-
-                getAll: jest.fn(),
-
-                getById: jest.fn(),
-
-            },
-
-            reels: {
-
-                getAll: jest.fn(),
-
-            },
-
             tagged: {
-
                 getAll: jest.fn(),
-
                 getById: jest.fn().mockReturnValue(taggedItem),
-
             },
-
         })
 
         app.register(taggedRoutes)
 
         const response = await app.inject({
-
             method: "GET",
-
-            url: /tagged/${taggedItem.id},
-
+            url: "/tagged/5",
         })
 
         expect(response.statusCode).toBe(200)
-
         expect(JSON.parse(response.payload)).toEqual(taggedItem)
-
     })
-
 })
-
-
