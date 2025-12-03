@@ -58,7 +58,7 @@ describe("GET /tagged/:id", () => {
                 getAll: jest.fn(),
                 getById: jest.fn().mockReturnValue(taggedItem),
             },
-        })
+        } as any)
 
         app.register(taggedRoutes)
 
