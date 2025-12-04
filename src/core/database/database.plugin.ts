@@ -45,9 +45,8 @@ async function databasePluginHelper(fastify: FastifyInstance) {
 
   CREATE TABLE IF NOT EXISTS highlights (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    image_url TEXT NOT NULL,
-    caption TEXT,
-    user_id INTEGER NOT NULL,
+    cover_image_url TEXT NOT NULL,
+    title TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 `)
