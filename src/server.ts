@@ -13,12 +13,13 @@ const fastify = Fastify({
     logger: true,
 })
 
+fastify.register(multipart)
+
 fastify.register(databasePlugin)
 fastify.register(postsRoutes)
 fastify.register(reelsRoutes)
 fastify.register(taggedRoutes)
 fastify.register(highlightsRoutes)
-fastify.register(multipart)
 
 fastify.get("/", async (_request, _reply) => {
     return { hello: "world" }
