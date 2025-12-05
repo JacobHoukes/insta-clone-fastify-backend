@@ -1,14 +1,18 @@
 import type { FastifyInstance, FastifyPluginAsync } from "fastify"
 import { postsService } from "./posts.service"
+import { z } from "zod"
+
+const createPostSchema = z.object({
+    caption: z.string().min(1, "Caption cannot be empty.").optional(),
+})
 
 const postsRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
     const service = postsService(fastify)
 
     fastify.post("/posts", async (request, reply) => {
         if (!request.isMultipart()) {
-            return reply
-                .code(415)
-                .send({ message: "Request must be multipart" })
+            reply.code(415).send({ message: "Request must be multipart" })
+            return
         }
 
         let caption = ""
