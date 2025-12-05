@@ -1,21 +1,38 @@
-import type { FastifyInstance, FastifyPluginAsync } from "fastify"
+import type { FastifyInstance, FastifyPluginAsync } from "fastify";
 import { postsService } from "./posts.service"
-import { CreatePostDto } from "./posts.types"
 
 const postsRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
     const service = postsService(fastify)
 
-    fastify.post<{ Body: CreatePostDto }>("/posts", async (request, reply) => {
-        const newPost = await service.create(request.body)
+  fastify.post("/posts", async (request, reply) => {
+    if (!request.isMultipart()) {
+      return reply.code(415).send({ message: "Request must be multipart" });
+    }
 
-        // Return a 201 Created status code with the new post object
-        return reply.code(201).send(newPost)
-    })
+    let caption = "";
+    let imageFile: { buffer: Buffer; filename: string } | undefined;
 
-    fastify.get("/posts", async (request, reply) => {
-        const posts = await fastify.transactions.posts.getAll()
-        return reply.code(200).send(posts)
-    })
-}
+    const incomingFormData = request.parts()
 
-export { postsRoutes }
+    for await (const part of incomingFormData) {
+      if (part.type === "field" && part.fieldname === "caption") {
+        caption = part.value as string;
+      }
+      else if (part.type == "file") {
+        const buffers: Buffer[] = []
+        for await (const chunk of part.file) {
+          buffers.push(chunk)
+        }
+        imageFile = {
+          buffer: Buffer.concat(buffers),
+          filename: part.filename,
+        };
+      }
+    }
+    const newPost = await service.create({
+        caption,
+        imageFile,
+    });
+
+    return reply.code(201).send(newPost);
+});
