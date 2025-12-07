@@ -1,6 +1,6 @@
 import type { Database } from "better-sqlite3"
 import { stat } from "node:fs/promises"
-import { CreatePostDto } from "src/modules/posts/posts.types"
+import { CreatePostDto, DeletePostDto } from "src/modules/posts/posts.types"
 
 // This factory function creates and returns our transaction helpers.
 const createTransactionHelpers = (db: Database) => {
@@ -11,6 +11,7 @@ const createTransactionHelpers = (db: Database) => {
         createPost: db.prepare(
             "INSERT INTO posts (img_url, caption) VALUES (@img_url, @caption) RETURNING *"
         ),
+        deletePost: db.prepare("DELETE FROM posts WHERE id = @id RETURNING *"),
         getAllReels: db.prepare("SELECT * FROM reels"),
         getAllTagged: db.prepare("SELECT * FROM tagged"),
         getTaggedById: db.prepare("SELECT * FROM tagged WHERE id = ?"),
@@ -27,6 +28,9 @@ const createTransactionHelpers = (db: Database) => {
         },
         create: (data: CreatePostDto) => {
             return statements.createPost.get(data)
+        },
+        delete: (data: DeletePostDto) => {
+            return statements.deletePost.get(data)
         },
     }
 

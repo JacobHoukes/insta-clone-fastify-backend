@@ -20,5 +20,16 @@ const postsSchema = z.array(postSchema)
 // This avoids duplicating type definitions and ensures our types always match our validation rules.
 type CreatePostDto = z.infer<typeof createPostDtoSchema>
 type Post = z.infer<typeof postSchema>
+type DeletePostDto = typeof z.object
+{
+    id: z.number().min(1)
+}
 
-export { createPostDtoSchema, postSchema, postsSchema, CreatePostDto, Post }
+export {
+    createPostDtoSchema,
+    postSchema,
+    postsSchema,
+    CreatePostDto,
+    Post,
+    DeletePostDto,
+}
