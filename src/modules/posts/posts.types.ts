@@ -13,6 +13,11 @@ const postSchema = z.object({
     created_at: z.string(), // SQLite returns DATETIME as a string by default
 })
 
+// NEW: schema for deleting a post
+const deletePostDtoSchema = z.object({
+    id: z.number().min(1),
+})
+
 // This will be useful for validating the response from the `GET /posts` endpoint.
 const postsSchema = z.array(postSchema)
 
@@ -20,15 +25,13 @@ const postsSchema = z.array(postSchema)
 // This avoids duplicating type definitions and ensures our types always match our validation rules.
 type CreatePostDto = z.infer<typeof createPostDtoSchema>
 type Post = z.infer<typeof postSchema>
-type DeletePostDto = typeof z.object
-{
-    id: z.number().min(1)
-}
+type DeletePostDto = z.infer<typeof deletePostDtoSchema>
 
 export {
     createPostDtoSchema,
     postSchema,
     postsSchema,
+    deletePostDtoSchema,
     CreatePostDto,
     Post,
     DeletePostDto,

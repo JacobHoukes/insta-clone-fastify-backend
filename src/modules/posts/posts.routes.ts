@@ -46,6 +46,18 @@ const postsRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
         const posts = fastify.transactions.posts.getAll()
         return reply.code(200).send(posts)
     })
+
+    fastify.delete("/posts/:id", async (request, reply) => {
+        const { id } = request.params as { id: string }
+
+        try {
+            fastify.transactions.posts.delete(Number(id))
+
+            return reply.code(204).send()
+        } catch (error) {
+            return reply.code(404).send({ message: "Failed to delete post" })
+        }
+    })
 }
 
 export { postsRoutes }
