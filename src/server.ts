@@ -29,12 +29,13 @@ fastify.get("/", async (_request, _reply) => {
     return { hello: "world" }
 })
 
-const port = 3000
+const port = Number(process.env.PORT) || 3000
+const host = "0.0.0.0"
 
 const start = async () => {
     try {
-        await fastify.listen({ port })
-        console.log(`🚀 Server is now listening on http://127.0.0.1:${port}`)
+        await fastify.listen({ port, host })
+        console.log(`🚀 Server is now listening on http://${host}:${port}`)
     } catch (err) {
         fastify.log.error(err)
         process.exit(1)
