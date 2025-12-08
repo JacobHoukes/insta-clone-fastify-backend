@@ -51,7 +51,7 @@ const postsRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
         const { id } = request.params as { id: string }
 
         try {
-            fastify.transactions.posts.delete(Number(id))
+            fastify.transactions.posts.delete({ id: Number(id) })
 
             return reply.code(204).send()
         } catch (error) {
